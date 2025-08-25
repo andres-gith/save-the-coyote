@@ -1,0 +1,17 @@
+{
+    "helloWorld": "¡Hola Mundo!",
+    "appTitle": "Salva al Coyote",
+    "instructionsTitle": "SALVA AL COYOTE!",
+    "instructionsDescription": "Toca la pantalla para detener al Coyote y salvarlo de la caida.",
+    "newRecord": "NUEVO RECORD",
+    "scoreScreenSaved1": "{times, plural, =0{AUN NO SALVASTE AL COYOTE} other{SALVASTE AL COYOTE}}",
+    "scoreScreenSaved2": "{times, plural, =0{} =1{VEZ} other{VECES}},",
+    "scoreScreenSaved3": "{times, plural, =0{Y AUN NO SE CAYO} other{Y SE CAYO}}",
+    "scoreTableTitle1": "PUNTAJE",
+    "scoreTableTitle2": "JUGADOR",
+    "scoreTableTitle3": "(CONTADOR)",
+    "yourMinimumScore": "TU PUNTAJE MINIMO ES",
+    "enterYourName": "Ingresa tu nombre",
+    "save": "GUARDAR",
+    "youFailed": "FALLASTE!"
+}

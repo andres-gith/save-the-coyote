@@ -1,0 +1,45 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+
+  "appTitle": "Save the Coyote",
+  "instructionsTitle": "SAVE THE COYOTE!",
+  "instructionsDescription": "Tap the screen to save the Coyote from falling.",
+  "newRecord": "NEW RECORD",
+  "scoreScreenSaved1": "{times, plural, =0{YOU DIDN'T SAVED THE COYOTE YET} other{YOU SAVED THE COYOTE}}",
+  "@scoreScreenSaved1": {
+    "placeholders": {
+      "times": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "scoreScreenSaved2": "{times, plural, =0{} =1{ONCE} other{TIMES}},",
+  "@scoreScreenSaved2": {
+    "placeholders": {
+      "times": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "scoreScreenSaved3": "{times, plural, =0{AND HE DIDN'T FELL YET} other{AND HE FELL}}",
+  "@scoreScreenSaved3": {
+    "placeholders": {
+      "times": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "scoreTableTitle1": "SCORE",
+  "scoreTableTitle2": "PLAYER",
+  "scoreTableTitle3": "(COUNTER)",
+  "yourMinimumScore": "YOUR MINIMUM SCORE IS",
+  "enterYourName": "Enter your name",
+  "save": "SAVE",
+  "youFailed": "YOU FAILED!"
+}
