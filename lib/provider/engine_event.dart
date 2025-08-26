@@ -24,3 +24,8 @@ class ShowInstructions extends EngineEvent {
 class ShowIntroEvent extends EngineEvent {
   ShowIntroEvent();
 }
+
+class TapRegisteredEvent extends EngineEvent {
+  TapRegisteredEvent(this.position);
+  final double? position;
+}

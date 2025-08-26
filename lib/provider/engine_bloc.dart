@@ -36,6 +36,15 @@ class EngineBloc extends Bloc<EngineEvent, EngineState> {
         case const (ShowIntroEvent):
           emit(IntroScreen());
           break;
+        case const (TapRegisteredEvent):
+          if (state is CoyoteFalling) {
+            TapRegisteredEvent tapEvent = event as TapRegisteredEvent;
+            if (tapEvent.position != null) {
+              add(StopFallEvent(tapEvent.position!));
+            }
+          } else if (state is CoyoteStopped) {
+            add(StartFallEvent());
+          }
       }
     });
   }
