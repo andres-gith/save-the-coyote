@@ -33,10 +33,10 @@ class ScoreBloc extends Bloc<ScoreEvent, ScoreState> {
           await _incrementCounter();
           final score = (event as ScoredPointsEvent).score;
           final record = _getRecord();
+          _saveScore(score);
           if (score > record) {
             add(NewRecordEvent(score));
           } else {
-            _saveScore(score);
             final counter = _getCounterValue();
             emit(ScoredPoints(counter: counter, failCounter: _getFailCounterValue(), lastRecordedName: lastRecordedName));
           }

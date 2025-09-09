@@ -1,28 +1,33 @@
 part of 'engine_bloc.dart';
 
 @immutable
-sealed class EngineEvent {}
+sealed class EngineEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+
+  const EngineEvent();
+}
 
 class OnLoadEvent extends EngineEvent {
-  OnLoadEvent();
+  const OnLoadEvent();
 }
 
 class StartFallEvent extends EngineEvent {
-  StartFallEvent();
+  const StartFallEvent();
 }
 
 class StopFallEvent extends EngineEvent {
-  StopFallEvent();
+  const StopFallEvent();
 }
 
 class ShowInstructions extends EngineEvent {
-  ShowInstructions();
+  const ShowInstructions();
 }
 
 class ShowIntroEvent extends EngineEvent {
-  ShowIntroEvent();
+  const ShowIntroEvent();
 }
 
 class TapRegisteredEvent extends EngineEvent {
-  TapRegisteredEvent();
+  const TapRegisteredEvent();
 }
