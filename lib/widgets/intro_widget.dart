@@ -10,10 +10,8 @@ class IntroWidget extends StatelessWidget {
     return BlocBuilder(
       bloc: engineBloc,
       buildWhen: (previous, current) => current is IntroScreen || previous is IntroScreen,
-      builder: (context, state) => Visibility(
-        visible: state is IntroScreen,
-        child: IntroGif(onViewed: () => engineBloc.add(ShowInstructions())),
-      ),
+      builder: (context, state) =>
+          state is IntroScreen ? IntroGif(onViewed: () => engineBloc.add(ShowInstructions())) : const SizedBox(),
     );
   }
 }

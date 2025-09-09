@@ -27,12 +27,12 @@ final class CoyoteFalling extends EngineRunning {
   const CoyoteFalling(super.position);
 }
 
-final class FailedToSaveCoyote extends EngineRunning {
-  const FailedToSaveCoyote() : super(_failPosition); // Position 1.0 indicates failure to save
-}
-
 final class CoyoteStopped extends EngineRunning {
   const CoyoteStopped(super.position);
+}
+
+final class CoyoteFell extends EngineRunning {
+  const CoyoteFell() : super(_failPosition);
 }
 
 final class CoyoteSaved extends CoyoteStopped {

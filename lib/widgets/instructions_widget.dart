@@ -10,10 +10,8 @@ class InstructionsWidget extends StatelessWidget {
     return BlocBuilder(
       bloc: engineBloc,
       buildWhen: (previous, current) => current is Instructions || previous is Instructions,
-      builder: (context, state) => Visibility(
-        visible: state is Instructions,
-        child: InstructionsText(onTap: () => engineBloc.add(StartFallEvent())),
-      ),
+      builder: (context, state) =>
+          state is Instructions ? InstructionsText(onTap: () => engineBloc.add(StartFallEvent())) : const SizedBox(),
     );
   }
 }

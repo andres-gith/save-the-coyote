@@ -15,53 +15,25 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateMixin {
-  late AnimationController fallController;
-  late Animation<double> fallAnimation;
+class _GameScreenState extends State<GameScreen> {
   late Size deviceSize;
   late EdgeInsets deviceInsets;
   final Size backgroundSize = const Size(672.0, 1000.0);
 
   late double roadRunnerTop;
   late double roadRunnerLeft;
-
-  @override
-  void initState() {
-    super.initState();
-    fallController = AnimationController(duration: randomDuration(), vsync: this);
-    fallAnimation = fallAnimation = _assignFallAnimation(fallController);
-  }
+  bool deviceSizeInitialized = false;
 
   @override
   void didChangeDependencies() {
-    deviceSize = MediaQuery.sizeOf(context);
-    deviceInsets = MediaQuery.of(context).padding;
-    roadRunnerTop = (deviceSize.height * 160.0 / backgroundSize.height) - 48.0;
-    roadRunnerLeft = deviceSize.width / 2 - 25.0;
+    if (!deviceSizeInitialized) {
+      deviceSize = MediaQuery.sizeOf(context);
+      deviceInsets = MediaQuery.paddingOf(context);
+      roadRunnerTop = (deviceSize.height * 160.0 / backgroundSize.height) - 48.0;
+      roadRunnerLeft = deviceSize.width / 2 - 25.0;
+      deviceSizeInitialized = true;
+    }
     super.didChangeDependencies();
-  }
-
-  Animation<double> _assignFallAnimation(AnimationController controller) {
-    controller.removeListener(coyotePositionListener);
-    return CurveTween(
-      curve: [
-        Curves.easeInQuart,
-        Curves.bounceIn,
-        Curves.decelerate,
-        Curves.easeInCubic,
-        Curves.easeInExpo,
-        Curves.easeInCirc,
-        Curves.easeInOutCubic,
-        Curves.easeInOutQuint,
-        Curves.easeOut,
-        Curves.easeOutQuart,
-        Curves.linear,
-      ][Random().nextInt(11)],
-    ).animate(controller)..addListener(coyotePositionListener);
-  }
-
-  void coyotePositionListener() {
-    widget.engineBloc.add(UpdatePositionEvent(fallAnimation.value));
   }
 
   Duration randomDuration({int min = 300, int max = 1700}) {
@@ -71,44 +43,15 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   }
 
   @override
-  void dispose() {
-    fallController.removeListener(coyotePositionListener);
-    fallController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocListener<EngineBloc, EngineState>(
       bloc: widget.engineBloc,
       listener: (context, state) {
-        switch (state.runtimeType) {
-          case const (CoyoteFalling):
-            if ((state as CoyoteFalling).position == 0.0) {
-              fallController.reset();
-              fallController.forward();
-            }
-            break;
-          case const (FailedToSaveCoyote):
-            fallController.stop();
-            Future.delayed(Duration(milliseconds: 500), () {
-              widget.engineBloc.add(StopFallEvent((state as FailedToSaveCoyote).position));
-            });
-            break;
-          case const (CoyoteNotSaved):
-            widget.scoreBloc.add(CountFailEvent());
-          case const (CoyoteSaved):
-            widget.scoreBloc.add(ScoredPointsEvent((state as CoyoteSaved).score));
-            break;
-          case const (Instructions):
-          case const (IntroScreen):
-            break;
+        if (state is CoyoteNotSaved) {
+          widget.scoreBloc.add(CountFailEvent());
         }
-        if (state is CoyoteStopped) {
-          fallController.stop();
-          Duration duration = randomDuration();
-          fallController.duration = duration;
-          fallAnimation = _assignFallAnimation(fallController);
+        if (state is CoyoteSaved) {
+          widget.scoreBloc.add(ScoredPointsEvent(state.score));
         }
       },
       child: Stack(
@@ -135,7 +78,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               Positioned(bottom: deviceInsets.bottom, right: 0.0, child: Rocks()),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTapDown: (_) => widget.engineBloc.add(TapRegisteredEvent(fallAnimation.value)),
+                onTapDown: (_) => widget.engineBloc.add(TapRegisteredEvent(/*fallAnimation.value*/)),
                 child: SizedBox.expand(),
               ),
               SignAnimation(engineBloc: widget.engineBloc, bottom: deviceInsets.bottom - deviceInsets.bottom - 30.0),
