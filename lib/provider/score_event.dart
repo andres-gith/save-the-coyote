@@ -1,49 +1,66 @@
 part of 'score_bloc.dart';
 
 @immutable
-sealed class ScoreEvent {}
+sealed class ScoreEvent extends Equatable {
+  const ScoreEvent();
+
+  @override
+  List<Object> get props => [];
+}
 
 class ScoreReadyEvent extends ScoreEvent {
-  ScoreReadyEvent();
+  const ScoreReadyEvent();
 }
 
 class CountFailEvent extends ScoreEvent {
-  CountFailEvent();
+  const CountFailEvent();
 }
 
 class ScoredPointsEvent extends ScoreEvent {
-  ScoredPointsEvent(this.score);
+  const ScoredPointsEvent(this.score);
 
   final int score;
+
+  @override
+  List<Object> get props => [score];
 }
 
 class ShowScoresEvent extends ScoreEvent {
-  ShowScoresEvent();
+  const ShowScoresEvent();
 }
 
 class DismissScoresEvent extends ScoreEvent {
-  DismissScoresEvent();
+  const DismissScoresEvent();
 }
 
 class NewRecordEvent extends ScoreEvent {
-  NewRecordEvent(this.score);
+  const NewRecordEvent(this.score);
 
   final int score;
+
+  @override
+  List<Object> get props => [score];
 }
 
 class SaveRecordEvent extends ScoreEvent {
-  SaveRecordEvent(this.score, this.name);
+  const SaveRecordEvent(this.score, this.name);
 
   final String name;
   final int score;
+
+  @override
+  List<Object> get props => [score, name];
 }
 
 class ChangeRecordedNameEvent extends ScoreEvent {
-  ChangeRecordedNameEvent();
+  const ChangeRecordedNameEvent();
 }
 
 class SaveRecordNameEvent extends ScoreEvent {
-  SaveRecordNameEvent(this.name);
+  const SaveRecordNameEvent(this.name);
 
   final String name;
+
+  @override
+  List<Object> get props => [name];
 }

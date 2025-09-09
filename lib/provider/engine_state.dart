@@ -38,6 +38,9 @@ final class CoyoteFell extends EngineRunning {
 final class CoyoteSaved extends CoyoteStopped {
   const CoyoteSaved(super.position, this.score);
   final int score;
+
+  @override
+  List<Object?> get props => [position, score];
 }
 
 final class CoyoteNotSaved extends CoyoteStopped {

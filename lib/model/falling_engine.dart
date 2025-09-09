@@ -38,7 +38,6 @@ class CoyoteFallingEngine {
   Curve _getRandomCurve() {
     return [
       Curves.easeInQuart,
-      //Curves.bounceIn,
       Curves.decelerate,
       Curves.easeInCubic,
       Curves.easeInExpo,
