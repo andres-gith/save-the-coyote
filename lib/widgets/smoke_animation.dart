@@ -16,7 +16,12 @@ class _SmokeAnimationState extends State<SmokeAnimation> {
   @override
   void initState() {
     super.initState();
-    smokeImage = GifView.asset('assets/smoke2.gif', controller: smokeController);
+    smokeImage = GifView.asset(
+      'assets/smoke2.gif',
+      controller: smokeController,
+      loop: false,
+      onFinish: () => widget.engineBloc.add(StopFallEvent()),
+    );
   }
 
   @override
@@ -31,12 +36,12 @@ class _SmokeAnimationState extends State<SmokeAnimation> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer(
+    return BlocConsumer<EngineBloc, EngineState>(
       bloc: widget.engineBloc,
-      listenWhen: (previous, current) => current is FailedToSaveCoyote,
+      listenWhen: (previous, current) => current is CoyoteFell,
       listener: (context, state) => resetSmoke(),
-      buildWhen: (previous, current) => current is FailedToSaveCoyote || previous is FailedToSaveCoyote,
-      builder: (context, state) => Visibility(visible: state is FailedToSaveCoyote, child: smokeImage),
+      buildWhen: (previous, current) => current is CoyoteFell || previous is CoyoteFell,
+      builder: (context, state) => Visibility(visible: state is CoyoteFell, child: smokeImage),
     );
   }
 }

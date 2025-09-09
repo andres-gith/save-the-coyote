@@ -22,12 +22,13 @@ class CoyoteFallingAnimation extends StatelessWidget {
         return current is EngineRunning && previous is EngineRunning && previous.position != current.position;
       },
       builder: (context, state) {
-        return AnimatedPositioned(
-          duration: const Duration(milliseconds: 0),
-          top: topOffset + (heightOffset * (state as EngineRunning).position),
-          left: leftPosition,
-          child: const Coyote(),
-        );
+        return state is EngineRunning
+            ? Positioned(
+                top: topOffset + (heightOffset * state.position),
+                left: leftPosition,
+                child: const Coyote(),
+              )
+            : const SizedBox();
       },
     );
   }

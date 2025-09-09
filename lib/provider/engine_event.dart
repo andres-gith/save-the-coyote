@@ -3,18 +3,16 @@ part of 'engine_bloc.dart';
 @immutable
 sealed class EngineEvent {}
 
+class OnLoadEvent extends EngineEvent {
+  OnLoadEvent();
+}
+
 class StartFallEvent extends EngineEvent {
   StartFallEvent();
 }
 
-class UpdatePositionEvent extends EngineEvent {
-  UpdatePositionEvent(this.position);
-  final double position;
-}
-
 class StopFallEvent extends EngineEvent {
-  StopFallEvent(this.position);
-  final double position;
+  StopFallEvent();
 }
 
 class ShowInstructions extends EngineEvent {
@@ -26,6 +24,5 @@ class ShowIntroEvent extends EngineEvent {
 }
 
 class TapRegisteredEvent extends EngineEvent {
-  TapRegisteredEvent(this.position);
-  final double? position;
+  TapRegisteredEvent();
 }
