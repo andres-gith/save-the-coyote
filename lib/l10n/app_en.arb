@@ -1,9 +1,4 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-
   "appTitle": "Save the Coyote",
   "instructionsTitle": "SAVE THE COYOTE!",
   "instructionsDescription": "Tap the screen to save the Coyote from falling.",

@@ -31,7 +31,7 @@ class _SmokeAnimationState extends State<SmokeAnimation> {
   }
 
   void resetSmoke() {
-    smokeController.play();
+    smokeController.seek(0);
   }
 
   @override

@@ -41,6 +41,7 @@ class _ScoreCountersState extends State<ScoreCounters> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ScoreBloc, ScoreState>(
+      bloc: widget.scoreBloc,
       listener: (context, state) {
         if (state is ScoreResults) {
           showDialog(
