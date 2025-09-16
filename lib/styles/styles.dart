@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class Styles {
   static TextStyle fontStyle = TextStyle(
-    fontFamily: 'GROBOLD',
     color: Colors.white,
     shadows: [Shadow(color: Colors.black, offset: const Offset(2, 2), blurRadius: 4)],
   );

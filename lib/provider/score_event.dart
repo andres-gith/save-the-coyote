@@ -8,6 +8,10 @@ sealed class ScoreEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class OnLoadScoreEvent extends ScoreEvent {
+  const OnLoadScoreEvent();
+}
+
 class ScoreReadyEvent extends ScoreEvent {
   const ScoreReadyEvent();
 }

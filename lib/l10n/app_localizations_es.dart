@@ -9,9 +9,6 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get helloWorld => '¡Hola Mundo!';
-
-  @override
   String get appTitle => 'Salva al Coyote';
 
   @override
@@ -19,7 +16,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get instructionsDescription =>
-      'Toca la pantalla para detener al Coyote y salvarlo de la caida.';
+      'Toca la pantalla para detener al Coyote y salvarlo de la caída.';
 
   @override
   String get newRecord => 'NUEVO RECORD';
@@ -35,7 +32,7 @@ class AppLocalizationsEs extends AppLocalizations {
       times,
       locale: localeName,
       other: 'SALVASTE AL COYOTE',
-      zero: 'AUN NO SALVASTE AL COYOTE',
+      zero: 'AÚN NO SALVASTE AL COYOTE',
     );
     return '$_temp0';
   }
@@ -67,8 +64,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       times,
       locale: localeName,
-      other: 'Y SE CAYO',
-      zero: 'Y AUN NO SE CAYO',
+      other: 'Y SE CAYÓ',
+      zero: 'Y AÚN NO SE CAYÓ',
     );
     return '$_temp0';
   }
@@ -83,7 +80,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get scoreTableTitle3 => '(CONTADOR)';
 
   @override
-  String get yourMinimumScore => 'TU PUNTAJE MINIMO ES';
+  String get yourMinimumScore => 'TU PUNTAJE MÍNIMO ES';
 
   @override
   String get enterYourName => 'Ingresa tu nombre';

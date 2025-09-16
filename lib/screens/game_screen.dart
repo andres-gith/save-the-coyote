@@ -78,7 +78,7 @@ class _GameScreenState extends State<GameScreen> {
               Positioned(bottom: deviceInsets.bottom, right: 0.0, child: Rocks()),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTapDown: (_) => widget.engineBloc.add(TapRegisteredEvent(/*fallAnimation.value*/)),
+                onTapDown: (_) => widget.engineBloc.add(TapRegisteredEvent()),
                 child: SizedBox.expand(),
               ),
               SignAnimation(engineBloc: widget.engineBloc, bottom: deviceInsets.bottom - deviceInsets.bottom - 30.0),

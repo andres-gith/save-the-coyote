@@ -7,6 +7,7 @@ class PlayerName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ScoreBloc, ScoreState>(
+      bloc: scoreBloc,
       listener: (context, state) {
         if (state is ChangeRecordedName) {
           showDialog(
