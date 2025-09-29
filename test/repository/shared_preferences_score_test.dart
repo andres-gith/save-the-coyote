@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:save_coyote/model/models.dart';
 import 'package:save_coyote/repository/shared_preferences_score.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -124,18 +125,21 @@ void main() {
       });
 
       test('getMaxScoresList returns stored value', () async {
-        final scores = ['Player1: 100', 'Player2: 200'];
+        final scores = ['100|2|Player1', '200|5|Player2'];
         SharedPreferences.setMockInitialValues({SharedPreferencesScore.maxScoresListKey: scores});
         await sharedPreferencesScore.initialize();
-        expect(sharedPreferencesScore.getMaxScoresList(), scores);
+        expect(sharedPreferencesScore.getMaxScoresList(), [
+          ScoreModel(score: 100, counter: 2, name: 'Player1'),
+          ScoreModel(score: 200, counter: 5, name: 'Player2'),
+        ]);
       });
 
       test('setMaxScoresList stores the value', () async {
-        final newScores = ['Wile E.: 50', 'Road Runner: 5000'];
+        final newScores = [ScoreModel(score: 5000, counter: 50, name: 'Wile E.')];
         sharedPreferencesScore.setMaxScoresList(newScores);
         await Future.delayed(Duration.zero);
         final prefs = await SharedPreferences.getInstance();
-        expect(prefs.getStringList(SharedPreferencesScore.maxScoresListKey), newScores);
+        expect(prefs.getStringList(SharedPreferencesScore.maxScoresListKey), ['5000|50|Wile E.']);
       });
     });
   });

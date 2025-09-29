@@ -1,4 +1,5 @@
 import 'package:save_coyote/repository/score_repository.dart';
+import 'score_model.dart';
 
 class ScoreEngine {
   ScoreEngine(ScoreRepository scoreRepository) : _scoreRepository = scoreRepository;
@@ -9,7 +10,7 @@ class ScoreEngine {
   late int? _minScoreValue;
   late String _lastRecordedName;
   late int _recordValue;
-  late List<String> _maxScoresList;
+  late List<ScoreModel> _maxScoresList;
 
   Future<void> initialize() async {
     await _scoreRepository.initialize();
@@ -57,8 +58,9 @@ class ScoreEngine {
     _scoreRepository.setRecordValue(value);
   }
 
-  List<String> get maxScoresList => _maxScoresList;
-  set maxScoresList(List<String> value) {
+  List<ScoreModel> get maxScoresList => _maxScoresList;
+
+  set maxScoresList(List<ScoreModel> value) {
     _maxScoresList = value;
     _scoreRepository.setMaxScoresList(value);
   }
@@ -71,17 +73,16 @@ class ScoreEngine {
     failCounterValue = _failCounterValue + 1;
   }
 
-
   Future<void> saveScore(int score) async {
     final newScoreResults = _addValue(_maxScoresList, score, _counterValue, _lastRecordedName);
     maxScoresList = newScoreResults;
-    minScoreValue =_getLesserScore(minScoreValue, score);
+    minScoreValue = _getLesserScore(minScoreValue, score);
   }
 
-  List<String> _addValue(List<String> scores, int score, int counter, String name) {
-    List<String> newScores = List.of(scores);
-    newScores.add('$score|$counter|$name');
-    newScores.sort((a, b) => int.parse(b.split('|')[0]).compareTo(int.parse(a.split('|')[0])));
+  List<ScoreModel> _addValue(List<ScoreModel> scores, int score, int counter, String name) {
+    List<ScoreModel> newScores = List.of(scores);
+    newScores.add(ScoreModel(score: score, counter: counter, name: name));
+    newScores.sort((a, b) => b.score.compareTo(a.score));
 
     return newScores.take(10).toList();
   }

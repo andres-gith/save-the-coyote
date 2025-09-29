@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:save_coyote/model/score_engine.dart';
+import 'package:save_coyote/model/score_model.dart';
 import 'package:save_coyote/repository/score_repository.dart';
 
 // Mock class for ScoreRepository
@@ -37,7 +38,9 @@ void main() {
       when(() => mockScoreRepository.getMinScoreValue()).thenReturn(100);
       when(() => mockScoreRepository.getLastRecordedName()).thenReturn('PlayerOne');
       when(() => mockScoreRepository.getRecordValue()).thenReturn(1000);
-      when(() => mockScoreRepository.getMaxScoresList()).thenReturn(['PlayerOne|1000|1']);
+      when(
+        () => mockScoreRepository.getMaxScoresList(),
+      ).thenReturn([ScoreModel(score: 1000, counter: 1, name: 'PlayerOne')]);
 
       await scoreEngine.initialize();
 
@@ -54,7 +57,7 @@ void main() {
       expect(scoreEngine.minScoreValue, 100);
       expect(scoreEngine.lastRecordedName, 'PlayerOne');
       expect(scoreEngine.recordValue, 1000);
-      expect(scoreEngine.maxScoresList, ['PlayerOne|1000|1']);
+      expect(scoreEngine.maxScoresList, [ScoreModel(score: 1000, counter: 1, name: 'PlayerOne')]);
     });
   });
 
@@ -65,9 +68,9 @@ void main() {
     });
 
     test('counterValue getter and setter', () async {
-      when(() => mockScoreRepository.getCounterValue()).thenReturn(10); 
-      scoreEngine = ScoreEngine(mockScoreRepository); 
-      await scoreEngine.initialize(); 
+      when(() => mockScoreRepository.getCounterValue()).thenReturn(10);
+      scoreEngine = ScoreEngine(mockScoreRepository);
+      await scoreEngine.initialize();
 
       expect(scoreEngine.counterValue, 10);
 
@@ -133,13 +136,14 @@ void main() {
     });
 
     test('maxScoresList getter and setter', () async {
-      when(() => mockScoreRepository.getMaxScoresList()).thenReturn(['S1|10|1']);
+      var mockedScore = ScoreModel(score: 10, counter: 1, name: 'S1');
+      when(() => mockScoreRepository.getMaxScoresList()).thenReturn([mockedScore]);
       scoreEngine = ScoreEngine(mockScoreRepository);
       await scoreEngine.initialize();
 
-      expect(scoreEngine.maxScoresList, ['S1|10|1']);
+      expect(scoreEngine.maxScoresList, [mockedScore]);
 
-      final newList = ['S2|20|2'];
+      final newList = [ScoreModel(score: 20, counter: 2, name: 'S2')];
       scoreEngine.maxScoresList = newList;
       expect(scoreEngine.maxScoresList, newList);
       verify(() => mockScoreRepository.setMaxScoresList(newList)).called(1);
@@ -179,9 +183,10 @@ void main() {
     });
 
     test('adds score to empty list, updates minScore', () async {
+      var mockedScore = ScoreModel(score: 100, counter: 1, name: 'TestPlayer');
       await scoreEngine.saveScore(100);
-      expect(scoreEngine.maxScoresList, ['100|1|TestPlayer']);
-      verify(() => mockScoreRepository.setMaxScoresList(['100|1|TestPlayer'])).called(1);
+      expect(scoreEngine.maxScoresList, [mockedScore]);
+      verify(() => mockScoreRepository.setMaxScoresList([mockedScore])).called(1);
       expect(scoreEngine.minScoreValue, 100);
       verify(() => mockScoreRepository.setMinScoreValue(100)).called(1);
     });
@@ -219,30 +224,30 @@ void main() {
         await scoreEngine.saveScore(i * 10); // 10, 20, ..., 100
       }
       expect(scoreEngine.maxScoresList.length, 10);
-      expect(scoreEngine.maxScoresList.first, '100|1|TestPlayer');
-      expect(scoreEngine.maxScoresList.last, '10|1|TestPlayer');
+      expect(scoreEngine.maxScoresList.first, ScoreModel(score: 100, counter: 1, name: 'TestPlayer'));
+      expect(scoreEngine.maxScoresList.last, ScoreModel(score: 10, counter: 1, name: 'TestPlayer'));
       // Verify setMaxScoresList was called 10 times during the loop
-      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<String>>()))).called(10);
+      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<ScoreModel>>()))).called(10);
 
       await scoreEngine.saveScore(101); // New highest score
       expect(scoreEngine.maxScoresList.length, 10);
-      expect(scoreEngine.maxScoresList.first, '101|1|TestPlayer');
-      expect(scoreEngine.maxScoresList.last, '20|1|TestPlayer'); // 10 is pushed out
-      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<String>>()))).called(1); // Called once more
+      expect(scoreEngine.maxScoresList.first, ScoreModel(score: 101, counter: 1, name: 'TestPlayer'));
+      expect(scoreEngine.maxScoresList.last, ScoreModel(score: 20, counter: 1, name: 'TestPlayer')); // 10 is pushed out
+      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<ScoreModel>>()))).called(1); // Called once more
 
       await scoreEngine.saveScore(5); // Lowest score, should not be added
       expect(scoreEngine.maxScoresList.length, 10);
-      expect(scoreEngine.maxScoresList.contains('5|1|TestPlayer'), isFalse);
-      expect(scoreEngine.maxScoresList.last, '20|1|TestPlayer'); // Still 20
-      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<String>>()))).called(1); // Called once more
-      
+      expect(scoreEngine.maxScoresList.contains(ScoreModel(score: 5, counter: 1, name: 'TestPlayer')), isFalse);
+      expect(scoreEngine.maxScoresList.last, ScoreModel(score: 20, counter: 1, name: 'TestPlayer')); // Still 20
+      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<ScoreModel>>()))).called(1); // Called once more
+
       await scoreEngine.saveScore(55); // Middle score
       expect(scoreEngine.maxScoresList.length, 10);
-      expect(scoreEngine.maxScoresList.contains('55|1|TestPlayer'), isTrue);
+      expect(scoreEngine.maxScoresList.contains(ScoreModel(score: 55, counter: 1, name: 'TestPlayer')), isTrue);
       // The list after 101, 100, ..., 20 and then 55 is added:
       // (101, 100, 90, 80, 70, 60, 55, 50, 40, 30) -> 20 is out. New last is 30.
-      expect(scoreEngine.maxScoresList.last, '30|1|TestPlayer');
-      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<String>>()))).called(1); // Called once more
+      expect(scoreEngine.maxScoresList.last, ScoreModel(score: 30, counter: 1, name: 'TestPlayer'));
+      verify(() => mockScoreRepository.setMaxScoresList(any(that: isA<List<ScoreModel>>()))).called(1); // Called once more
     });
   });
 }

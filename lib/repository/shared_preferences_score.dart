@@ -1,3 +1,4 @@
+import 'package:save_coyote/model/models.dart';
 import 'package:save_coyote/repository/score_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,12 +68,23 @@ class SharedPreferencesScore implements ScoreRepository {
   }
 
   @override
-  List<String> getMaxScoresList() {
-    return prefs.getStringList(maxScoresListKey) ?? List<String>.empty();
+  List<ScoreModel> getMaxScoresList() {
+    return (prefs.getStringList(maxScoresListKey) ?? List<String>.empty())
+        .map(
+          (record) => ScoreModel(
+            score: int.parse(record.split('|')[0]),
+            counter: int.parse(record.split('|')[1]),
+            name: record.split('|')[2],
+          ),
+        )
+        .toList();
   }
 
   @override
-  void setMaxScoresList(List<String> scores) async {
-    await prefs.setStringList(maxScoresListKey, scores);
+  void setMaxScoresList(List<ScoreModel> scores) async {
+    await prefs.setStringList(
+      maxScoresListKey,
+      scores.map((record) => '${record.score}|${record.counter}|${record.name}').toList(),
+    );
   }
 }

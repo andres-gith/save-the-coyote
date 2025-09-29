@@ -39,7 +39,7 @@ final class ScoreResults extends ScoreState {
     required this.maxScores,
   });
 
-  final List<String> maxScores;
+  final List<ScoreModel> maxScores;
   final int counter;
   final int failCounter;
   final int? minScore;

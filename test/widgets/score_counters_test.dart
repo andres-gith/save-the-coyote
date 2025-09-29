@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:save_coyote/model/models.dart';
 import 'package:save_coyote/provider/score_bloc.dart';
 import 'package:save_coyote/screens/screens.dart';
 import 'package:save_coyote/widgets/widgets.dart';
@@ -9,7 +10,9 @@ import 'package:save_coyote/l10n/app_localizations.dart'; // Added AppLocalizati
 
 // Mocks
 class MockScoreBloc extends MockBloc<ScoreEvent, ScoreState> implements ScoreBloc {}
+
 class MockAnimationController extends Mock implements AnimationController {}
+
 // Minimal Styles mock
 class Styles {
   static Color colorYellow = Colors.yellow;
@@ -35,11 +38,11 @@ void main() {
     when(() => mockScoreBloc.state).thenReturn(initialState);
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates, // Using AppLocalizations.localizationsDelegates
-        supportedLocales: AppLocalizations.supportedLocales, // Using AppLocalizations.supportedLocales
-        home: Scaffold(
-          body: ScoreCounters(scoreBloc: mockScoreBloc),
-        ),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        // Using AppLocalizations.localizationsDelegates
+        supportedLocales: AppLocalizations.supportedLocales,
+        // Using AppLocalizations.supportedLocales
+        home: Scaffold(body: ScoreCounters(scoreBloc: mockScoreBloc)),
       ),
     );
   }
@@ -81,7 +84,12 @@ void main() {
 
     group('Listener Logic', () {
       testWidgets('shows ScoreResultsScreen on ScoreResults state and handles dismiss', (WidgetTester tester) async {
-        final resultsState = ScoreResults(counter: 10, failCounter: 2, maxScores: ['100|2|3'], minScore: 50);
+        final resultsState = ScoreResults(
+          counter: 10,
+          failCounter: 2,
+          maxScores: [ScoreModel(score: 100, counter: 2, name: 'Player 1')],
+          minScore: 50,
+        );
         whenListen(
           mockScoreBloc,
           Stream<ScoreState>.fromIterable([ScoreInitial(), resultsState]),
@@ -105,7 +113,7 @@ void main() {
 
       testWidgets('shows RecordScreen on NewRecord state and handles save', (WidgetTester tester) async {
         final recordState = NewRecord(score: 1000, lastRecordedName: 'PreviousName');
-         whenListen(
+        whenListen(
           mockScoreBloc,
           Stream<ScoreState>.fromIterable([ScoreInitial(), recordState]),
           initialState: ScoreInitial(),
@@ -122,16 +130,23 @@ void main() {
         // Simulate save (placeholder RecordScreen saves with "TestName")
         await tester.tap(find.ancestor(of: find.text('SAVE'), matching: find.byType(TextButton)));
         await tester.pumpAndSettle();
-        verify(() => mockScoreBloc.add(SaveRecordEvent(recordState.score, recordState.lastRecordedName ?? 'TestName'))).called(1);
+        verify(
+          () => mockScoreBloc.add(SaveRecordEvent(recordState.score, recordState.lastRecordedName ?? 'TestName')),
+        ).called(1);
         expect(find.byType(RecordScreen), findsNothing);
       });
 
-      testWidgets('listener responds to ScoredPoints state (animation trigger indication)', (WidgetTester tester) async {
+      testWidgets('listener responds to ScoredPoints state (animation trigger indication)', (
+        WidgetTester tester,
+      ) async {
         // This test mainly ensures the bloc state transition is handled by the listener.
         // Direct animation controller verification is omitted for simplicity here.
         whenListen(
           mockScoreBloc,
-          Stream<ScoreState>.fromIterable([ScoreInitial(), ScoredPoints(counter: 1, failCounter: 0, lastRecordedName: 'P')]),
+          Stream<ScoreState>.fromIterable([
+            ScoreInitial(),
+            ScoredPoints(counter: 1, failCounter: 0, lastRecordedName: 'P'),
+          ]),
           initialState: ScoreInitial(),
         );
         await pumpScoreCounters(tester, initialState: ScoreInitial());
@@ -143,7 +158,10 @@ void main() {
       testWidgets('listener responds to ScoredFail state (animation trigger indication)', (WidgetTester tester) async {
         whenListen(
           mockScoreBloc,
-          Stream<ScoreState>.fromIterable([ScoreInitial(), ScoredFail(counter: 1, failCounter: 1, lastRecordedName: 'P')]),
+          Stream<ScoreState>.fromIterable([
+            ScoreInitial(),
+            ScoredFail(counter: 1, failCounter: 1, lastRecordedName: 'P'),
+          ]),
           initialState: ScoreInitial(),
         );
         await pumpScoreCounters(tester, initialState: ScoreInitial());

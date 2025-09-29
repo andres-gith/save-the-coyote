@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_coyote/l10n/app_localizations.dart';
+import 'package:save_coyote/model/score_model.dart';
 import 'package:save_coyote/styles/styles.dart';
 import 'package:save_coyote/widgets/widgets.dart';
 
@@ -16,7 +17,7 @@ class ScoreResultsScreen extends StatelessWidget {
   final VoidCallback onDismiss;
   final int failCounter;
   final int counter;
-  final List<String> maxScores;
+  final List<ScoreModel> maxScores;
   final int? minScore;
 
   @override
@@ -70,26 +71,24 @@ class ScoreResultsScreen extends StatelessWidget {
                       ScoreResultTitle(title: AppLocalizations.of(context)!.scoreTableTitle3),
                     ],
                   ),
-
                   ...maxScores.map((rowScore) {
-                    final values = rowScore.split('|');
                     return TableRow(
                       children: [
                         Align(
                           alignment: Alignment.center,
-                          child: Text(values[0], style: Styles.fontStyle.copyWith(fontSize: 32.0)),
+                          child: Text('${rowScore.score}', style: Styles.fontStyle.copyWith(fontSize: 32.0)),
                         ),
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            values[2],
+                            rowScore.name,
                             style: Styles.fontStyle.copyWith(fontSize: 20.0),
                             textAlign: TextAlign.center,
                           ),
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: Text(values[1], style: Styles.fontStyle.copyWith(fontSize: 28.0)),
+                          child: Text('${rowScore.counter}', style: Styles.fontStyle.copyWith(fontSize: 28.0)),
                         ),
                       ],
                     );
