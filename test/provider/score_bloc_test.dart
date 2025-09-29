@@ -27,8 +27,12 @@ void main() {
     when(() => mockScoreEngine.incrementFailCounter()).thenAnswer((_) async => Future.value());
     when(() => mockScoreEngine.saveScore(any())).thenAnswer((_) async => Future.value());
     // For setters, thenAnswer must return the value being set.
-    when(() => mockScoreEngine.lastRecordedName = any()).thenAnswer((invocation) => invocation.positionalArguments.first as String);
-    when(() => mockScoreEngine.recordValue = any()).thenAnswer((invocation) => invocation.positionalArguments.first as int);
+    when(
+      () => mockScoreEngine.lastRecordedName = any(),
+    ).thenAnswer((invocation) => invocation.positionalArguments.first as String);
+    when(
+      () => mockScoreEngine.recordValue = any(),
+    ).thenAnswer((invocation) => invocation.positionalArguments.first as int);
 
     scoreBloc = ScoreBloc(engine: mockScoreEngine);
   });
@@ -50,9 +54,7 @@ void main() {
       return scoreBloc;
     },
     act: (bloc) => bloc.add(OnLoadScoreEvent()),
-    expect: () => [
-      ScoreReady(counter: 5, failCounter: 1, lastRecordedName: 'LoadedPlayer'),
-    ],
+    expect: () => [ScoreReady(counter: 5, failCounter: 1, lastRecordedName: 'LoadedPlayer')],
     verify: (_) {
       verify(() => mockScoreEngine.initialize()).called(1);
     },
@@ -67,9 +69,7 @@ void main() {
     },
     build: () => scoreBloc,
     act: (bloc) => bloc.add(ScoreReadyEvent()),
-    expect: () => [
-      ScoreReady(counter: 10, failCounter: 3, lastRecordedName: 'ReadyPlayer'),
-    ],
+    expect: () => [ScoreReady(counter: 10, failCounter: 3, lastRecordedName: 'ReadyPlayer')],
   );
 
   blocTest<ScoreBloc, ScoreState>(
@@ -88,9 +88,7 @@ void main() {
     },
     build: () => scoreBloc,
     act: (bloc) => bloc.add(CountFailEvent()),
-    expect: () => [
-      ScoredFail(counter: 6, failCounter: 3, lastRecordedName: 'FailGuy'),
-    ],
+    expect: () => [ScoredFail(counter: 6, failCounter: 3, lastRecordedName: 'FailGuy')],
     verify: (_) {
       verify(() => mockScoreEngine.incrementCounter()).called(1);
       verify(() => mockScoreEngine.incrementFailCounter()).called(1);
@@ -112,9 +110,7 @@ void main() {
       },
       build: () => scoreBloc,
       act: (bloc) => bloc.add(ScoredPointsEvent(500)),
-      expect: () => [
-        ScoredPoints(counter: 2, failCounter: 0, lastRecordedName: 'Hero'),
-      ],
+      expect: () => [ScoredPoints(counter: 2, failCounter: 0, lastRecordedName: 'Hero')],
       verify: (_) {
         verify(() => mockScoreEngine.incrementCounter()).called(1);
         verify(() => mockScoreEngine.saveScore(500)).called(1);
@@ -135,9 +131,7 @@ void main() {
       },
       build: () => scoreBloc,
       act: (bloc) => bloc.add(ScoredPointsEvent(1500)),
-      expect: () => [
-        NewRecord(score: 1500, lastRecordedName: 'Champion'),
-      ],
+      expect: () => [NewRecord(score: 1500, lastRecordedName: 'Champion')],
       verify: (_) {
         verify(() => mockScoreEngine.incrementCounter()).called(1);
         verifyNever(() => mockScoreEngine.saveScore(any()));
@@ -151,7 +145,10 @@ void main() {
       when(() => mockScoreEngine.minScoreValue).thenReturn(100);
       when(() => mockScoreEngine.counterValue).thenReturn(15);
       when(() => mockScoreEngine.failCounterValue).thenReturn(5);
-      when(() => mockScoreEngine.maxScoresList).thenReturn(['Player1:100', 'Player2:200']);
+      when(() => mockScoreEngine.maxScoresList).thenReturn([
+        ScoreModel(score: 100, counter: 1, name: 'Player1'),
+        ScoreModel(score: 200, counter: 2, name: 'Player2'),
+      ]);
       when(() => mockScoreEngine.lastRecordedName).thenReturn('Viewer');
     },
     build: () => scoreBloc,
@@ -161,7 +158,10 @@ void main() {
         minScore: 100,
         counter: 15,
         failCounter: 5,
-        maxScores: ['Player1:100', 'Player2:200'],
+        maxScores: [
+          ScoreModel(score: 100, counter: 1, name: 'Player1'),
+          ScoreModel(score: 200, counter: 2, name: 'Player2'),
+        ],
       ),
     ],
   );
@@ -176,9 +176,7 @@ void main() {
     build: () => scoreBloc,
     seed: () => ScoreResults(minScore: 0, counter: 0, failCounter: 0, maxScores: [], lastRecordedName: ''),
     act: (bloc) => bloc.add(DismissScoresEvent()),
-    expect: () => [
-      ScoreReady(counter: 20, failCounter: 8, lastRecordedName: 'DismissUser'),
-    ],
+    expect: () => [ScoreReady(counter: 20, failCounter: 8, lastRecordedName: 'DismissUser')],
   );
 
   blocTest<ScoreBloc, ScoreState>(
@@ -188,9 +186,7 @@ void main() {
     },
     build: () => scoreBloc,
     act: (bloc) => bloc.add(NewRecordEvent(2000)),
-    expect: () => [
-      NewRecord(score: 2000, lastRecordedName: 'RecordBreaker'),
-    ],
+    expect: () => [NewRecord(score: 2000, lastRecordedName: 'RecordBreaker')],
   );
 
   blocTest<ScoreBloc, ScoreState>(
@@ -211,9 +207,7 @@ void main() {
     },
     build: () => scoreBloc,
     act: (bloc) => bloc.add(SaveRecordEvent(2500, 'NewChampionName')),
-    expect: () => [
-      ScoredPoints(counter: 7, failCounter: 2, lastRecordedName: 'NewChampionName'),
-    ],
+    expect: () => [ScoredPoints(counter: 7, failCounter: 2, lastRecordedName: 'NewChampionName')],
     verify: (_) {
       verify(() => mockScoreEngine.recordValue = 2500).called(1);
       verify(() => mockScoreEngine.lastRecordedName = 'NewChampionName').called(1);
@@ -228,9 +222,7 @@ void main() {
     },
     build: () => scoreBloc,
     act: (bloc) => bloc.add(ChangeRecordedNameEvent()),
-    expect: () => [
-      ChangeRecordedName(lastRecordedName: 'ChangeMe'),
-    ],
+    expect: () => [ChangeRecordedName(lastRecordedName: 'ChangeMe')],
   );
 
   blocTest<ScoreBloc, ScoreState>(
@@ -247,9 +239,7 @@ void main() {
     },
     build: () => scoreBloc,
     act: (bloc) => bloc.add(SaveRecordNameEvent('NewPlayerName')),
-    expect: () => [
-      ScoreReady(counter: 30, failCounter: 10, lastRecordedName: 'NewPlayerName'),
-    ],
+    expect: () => [ScoreReady(counter: 30, failCounter: 10, lastRecordedName: 'NewPlayerName')],
     verify: (_) {
       verify(() => mockScoreEngine.lastRecordedName = 'NewPlayerName').called(1);
     },
@@ -275,8 +265,19 @@ void main() {
       expect(ScoredPoints(counter: 2, failCounter: 2, lastRecordedName: 'B').props, [2, 2, 'B']);
       expect(ScoredFail(counter: 3, failCounter: 3, lastRecordedName: 'C').props, [3, 3, 'C']);
       final resultsState = ScoreResults(
-          counter: 4, failCounter: 4, maxScores: ['s1'], minScore: 10, lastRecordedName: 'D');
-      expect(resultsState.props, [['s1'], 4, 4, 10, 'D']);
+        counter: 4,
+        failCounter: 4,
+        maxScores: [ScoreModel(score: 200, counter: 2, name: 'Player2')],
+        minScore: 10,
+        lastRecordedName: 'D',
+      );
+      expect(resultsState.props, [
+        [ScoreModel(score: 200, counter: 2, name: 'Player2')],
+        4,
+        4,
+        10,
+        'D',
+      ]);
       expect(NewRecord(score: 100, lastRecordedName: 'E').props, [100, 'E']);
       expect(ChangeRecordedName(lastRecordedName: 'F').props, ['F']);
     });

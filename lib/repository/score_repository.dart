@@ -1,3 +1,5 @@
+import 'package:save_coyote/model/score_model.dart';
+
 abstract interface class ScoreRepository {
   Future<void> initialize();
 
@@ -16,7 +18,7 @@ abstract interface class ScoreRepository {
   int getRecordValue();
   void setRecordValue(int value);
 
-  List<String> getMaxScoresList();
-  void setMaxScoresList(List<String> scores);
+  List<ScoreModel> getMaxScoresList();
+  void setMaxScoresList(List<ScoreModel> scores);
 
 }
