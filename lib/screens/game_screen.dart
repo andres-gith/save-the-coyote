@@ -70,16 +70,16 @@ class _GameScreenState extends State<GameScreen> {
                 right: 50.0,
                 child: RepaintBoundary(child: SmokeAnimation(engineBloc: widget.engineBloc)),
               ),
-              Positioned(
-                top: roadRunnerTop,
-                left: roadRunnerLeft,
-                child: RepaintBoundary(child: const RoadRunner()),
-              ),
               Positioned(bottom: deviceInsets.bottom, right: 0.0, child: Rocks()),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTapDown: (_) => widget.engineBloc.add(TapRegisteredEvent()),
                 child: SizedBox.expand(),
+              ),
+              Positioned(
+                top: roadRunnerTop,
+                left: roadRunnerLeft,
+                child: RepaintBoundary(child: const RoadRunner()),
               ),
               SignAnimation(engineBloc: widget.engineBloc, bottom: deviceInsets.bottom - deviceInsets.bottom - 30.0),
               Positioned(
